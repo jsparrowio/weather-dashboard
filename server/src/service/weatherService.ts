@@ -1,13 +1,13 @@
 import dotenv from 'dotenv';
 dotenv.config();
 
-// TODO: Define an interface for the Coordinates object
+// Defines an interface for the Coordinates object that is used once a location is destructered
 interface Coordinates {
   lat: number;
   lon: number;
 }
 
-// TODO: Define a class for the Weather object
+// Defines a class for the Weather object to be used for current weather
 class Weather {
   city: string;
   date: string;
@@ -17,7 +17,7 @@ class Weather {
   windSpeed: number;
   humidity: number;
 
-  constructor(city: string, date: string,  icon: string, description: string, tempF: number, windSpeed: number, humidity: number) {
+  constructor(city: string, date: string, icon: string, description: string, tempF: number, windSpeed: number, humidity: number) {
     this.city = city;
     this.date = date;
     this.icon = icon;
@@ -28,7 +28,7 @@ class Weather {
   }
 }
 
-// TODO: Complete the WeatherService class
+// WeatherService class to serve as the main function of the weather API
 class WeatherService {
 
   private baseURL?: string;
@@ -52,7 +52,7 @@ class WeatherService {
       return null;
     }
   }
-  // TODO: Create destructureLocationData method
+  // destructureLocationData method to grab the coordiantes from destructed location data
   private destructureLocationData(locationData: any[]): Coordinates {
     const coordinates = {
       lat: locationData[0].lat,
@@ -60,27 +60,27 @@ class WeatherService {
     }
     return coordinates;
   }
-  // TODO: Create buildGeocodeQuery method
+  // Creates a buildGeocodeQuery method to specify which external API URL to use to grab locationData from a city name
   private buildGeocodeQuery(cityName: string): string {
     return `${this.baseURL}/geo/1.0/direct?q=${encodeURIComponent(cityName)}&limit=1&appid=${this.apiKey}`;
   }
-  // TODO: Create buildWeatherQuery method
-  private buildWeatherQuery(coordinates: Coordinates, queryType:  'currentWeather' | 'forecast' = 'forecast'): string {
+  // Creates a buildWeatherQuery method to specify which external API URL to use to grab weather data. Uses current weather or forecase types to check for specific calls.
+  private buildWeatherQuery(coordinates: Coordinates, queryType: 'currentWeather' | 'forecast' = 'forecast'): string {
     const { lat, lon } = coordinates;
     if (queryType === 'forecast') {
-    const response = `${this.baseURL}/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${this.apiKey}&units=imperial`;
-    return response;
+      const response = `${this.baseURL}/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${this.apiKey}&units=imperial`;
+      return response;
     } else {
-    const response = `${this.baseURL}/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${this.apiKey}&units=imperial`;
-    return response;
+      const response = `${this.baseURL}/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${this.apiKey}&units=imperial`;
+      return response;
     }
   }
-  // TODO: Create fetchAndDestructureLocationData method
+  // Create a fetchAndDestructureLocationData method that calls two methods defined elsewhere to grab, destructure, and grab coordinates from locationData
   private async fetchAndDestructureLocationData(query: string): Promise<Coordinates> {
     const data = await this.fetchLocationData(query);
     return this.destructureLocationData(data);
   }
-  // TODO: Create fetchWeatherData method
+  // Creates a fetchWeatherData method that calls the buildWeatherQuery method to fetch from the URL defined in said method using an HTML Query
   private async fetchWeatherData(coordinates: Coordinates, queryType: 'currentWeather' | 'forecast' = 'forecast') {
     try {
       const weatherQuery = this.buildWeatherQuery(coordinates, queryType);
@@ -95,7 +95,7 @@ class WeatherService {
       return null;
     }
   }
-  // TODO: Build parseCurrentWeather method
+  // Builds a parseCurrentWeather method that parses the current weather from JSON data thrown from the response argument
   private parseCurrentWeather(response: any): Weather {
     if (!response) {
       throw new Error('Network response failed');
@@ -112,7 +112,7 @@ class WeatherService {
       humidity: response.main.humidity
     };
   }
-  // TODO: Complete buildForecastArray method
+  // buildForecastArray method to build an array of forecast data from the JSON forecast data thrown into the argument
   private buildForecastArray(forecastData: any[]) {
     const forecast = forecastData.slice(1, 6).map((forecastSliced) => {
       return {
@@ -126,19 +126,20 @@ class WeatherService {
     });
     return forecast
   }
-  // TODO: Complete getWeatherForCity method+
+  // getWeatherForCity method that uses all the methods defined above to grab current weather and weather forecast using a city name thrown by the search of the user, then returns all said data
   async getWeatherForCity(city: string): Promise<any> {
     const coordinates = await this.fetchAndDestructureLocationData(city);
-    console.log (`City of ${city} has coordinates of:`, coordinates)
+    console.log(`City of ${city} has coordinates of:`, coordinates)
     const currentWeatherData = await this.fetchWeatherData(coordinates, 'currentWeather');
-    console.log (`Retrieved current weather successfully...`)
+    console.log(`Retrieved current weather successfully...`)
     const forecastData = await this.fetchWeatherData(coordinates, 'forecast');
-    console.log (`Retrieved weather forecast successfully...`)
+    console.log(`Retrieved weather forecast successfully...`)
     const currentWeather = this.parseCurrentWeather(currentWeatherData);
     const forecast = this.buildForecastArray(forecastData.list);
-    console.log (`Built current weather object and forecast array successfully...`)
+    console.log(`Built current weather object and forecast array successfully...`)
     return { currentWeather, forecast };
   }
 }
 
+// Allows the weatherService to be imported elsewhere in the application when needed
 export default new WeatherService();
