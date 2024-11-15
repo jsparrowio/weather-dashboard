@@ -114,24 +114,16 @@ class WeatherService {
   }
   // buildForecastArray method to build an array of forecast data from the JSON forecast data thrown into the argument
   private buildForecastArray(forecastList: any[]) {
-    const currentDate = new Date().toLocaleDateString();
-    const forecastFiltered = [];
-    for (var i = 0; i < forecastList.length; i++) {
-      const forecastDate = new Date(forecastList[i].dt * 1000).toLocaleDateString();
-      if (currentDate !== forecastDate) {
-        forecastFiltered.push(forecastList[i]);
-      }
-    }
     const forecast = [];
-    for (var i = 4; i < forecastFiltered.length; i += 8) {
-      const date = new Date(forecastFiltered[i].dt * 1000).toLocaleDateString();
+    for (var i = 4; i < forecastList.length; i += 8) {
+      const date = new Date(forecastList[i].dt * 1000).toLocaleDateString();
       const forecastObj = {
         date: date,
-        tempF: forecastFiltered[i].main.temp,
-        iconDescription: forecastFiltered[i].weather[0].description,
-        icon: forecastFiltered[i].weather[0].icon,
-        windSpeed: forecastFiltered[i].wind.speed,
-        humidity: forecastFiltered[i].main.humidity,
+        tempF: forecastList[i].main.temp,
+        iconDescription: forecastList[i].weather[0].description,
+        icon: forecastList[i].weather[0].icon,
+        windSpeed: forecastList[i].wind.speed,
+        humidity: forecastList[i].main.humidity,
       }
       forecast.push(forecastObj);
     }
