@@ -113,18 +113,29 @@ class WeatherService {
     };
   }
   // buildForecastArray method to build an array of forecast data from the JSON forecast data thrown into the argument
-  private buildForecastArray(forecastData: any[]) {
-    const forecast = forecastData.slice(1, 6).map((forecastSliced) => {
-      return {
-        date: forecastSliced.dt_txt,
-        tempF: forecastSliced.main.temp,
-        iconDescription: forecastSliced.weather[0].description,
-        icon: forecastSliced.weather[0].icon,
-        windSpeed: forecastSliced.wind.speed,
-        humidity: forecastSliced.main.humidity,
-      };
-    });
-    return forecast
+  private buildForecastArray(forecastList: any[]) {
+    const currentDate = new Date().toLocaleDateString();
+    const forecastFiltered = [];
+    for (var i = 0; i < forecastList.length; i++) {
+      const forecastDate = new Date(forecastList[i].dt * 1000).toLocaleDateString();
+      if (currentDate !== forecastDate) {
+        forecastFiltered.push(forecastList[i]);
+      }
+    }
+    const forecast = [];
+    for (var i = 4; i < forecastFiltered.length; i += 8) {
+      const date = new Date(forecastFiltered[i].dt * 1000).toLocaleDateString();
+      const forecastObj = {
+        date: date,
+        tempF: forecastFiltered[i].main.temp,
+        iconDescription: forecastFiltered[i].weather[0].description,
+        icon: forecastFiltered[i].weather[0].icon,
+        windSpeed: forecastFiltered[i].wind.speed,
+        humidity: forecastFiltered[i].main.humidity,
+      }
+      forecast.push(forecastObj);
+    }
+    return forecast;
   }
   // getWeatherForCity method that uses all the methods defined above to grab current weather and weather forecast using a city name thrown by the search of the user, then returns all said data
   async getWeatherForCity(city: string): Promise<any> {
