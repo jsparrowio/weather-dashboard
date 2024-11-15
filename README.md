@@ -26,7 +26,7 @@ To use this application, simply access the website linked below and search for a
 
 NOTE: Please use specific State and Country codes to search your city as there may be several cities with your city name. For example, if you search London and want the city in England, you would need to specify London, England to get that specific city. For the US, for example, San Diego, CA, US instead of just San Diego.
 
-Access the deployed link: here (TBA)
+Access the deployed link: [here](https://weather-dashboard-uhei.onrender.com/)
 
 ## License
 This project uses MIT License.
