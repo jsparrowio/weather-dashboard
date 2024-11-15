@@ -22,7 +22,7 @@ No installation needed as it is a live hosted application. Simply access the sit
   
 ## Usage
   
-To use this application, simply access the website linked below and search for a cities weather using the search function. This will display the current weather and a 5-day forecast.
+To use this application, simply access the website linked below and search for a citys weather using the search function. This will display the current weather and a 5-day forecast.
 
 NOTE: Please use specific State and Country codes to search your city as there may be several cities with your city name. For example, if you search London and want the city in England, you would need to specify London, England to get that specific city. For the US, for example, San Diego, CA, US instead of just San Diego.
 
